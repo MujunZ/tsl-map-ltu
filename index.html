@@ -30,6 +30,13 @@ API Course, Lesson 1 -->
     var markers = [];
 
     var locations = [{
+               title:'LTU Business and Technology Accelerator',
+               location:{
+                  lat:42.4782616,
+                  lng:-83.2568227
+               },
+               content:''
+            },{
                title:'Automation Alley',
                location:{
                   lat:42.559934,
@@ -150,27 +157,51 @@ API Course, Lesson 1 -->
         var position = locations[i].location;
             title = locations[i].title;
             content = locations[i].content;
-        var marker = new google.maps.Marker({
-          position: position,
-          title: title,
-          icon: defaultIcon,
-          content: content,
-          label: {
-          	text: title,
-          	color: "#004080",
-		    fontSize: "16px",
-		    fontWeight: "bold"
-          },
-          animation: google.maps.Animation.DROP,
-          id: i
-        }); 
+        var marker;
+        if (i === 0) {
+          marker = new google.maps.Marker({
+              position: position,
+              title: title,
+              icon: 'http://icons.iconarchive.com/icons/gianni-polito/colobrush/32/system-star-icon.png',
+              content: content,
+              label: {
+                text: title,
+                color: "#004080",
+                fontSize: "16px",
+                fontWeight: "bold"
+              },
+              animation: google.maps.Animation.DROP,
+              id: i
+           }); 
+          marker.addListener('mouseout', function () {
+            this.setIcon('http://icons.iconarchive.com/icons/gianni-polito/colobrush/32/system-star-icon.png');
+          });
+        } else {
+          marker = new google.maps.Marker({
+            position: position,
+            title: title,
+            icon: defaultIcon,
+            content: content,
+            label: {
+              text: title,
+              color: "#004080",
+              fontSize: "16px",
+              fontWeight: "bold"
+            },
+            animation: google.maps.Animation.DROP,
+            id: i
+          }); 
+          marker.addListener('mouseout', function () {
+            this.setIcon(defaultIcon);
+          });
+        };
         var circle = new google.maps.Circle({
 			  map: map,
 			  radius: 5000,
 			  strokeWeight:0,
 			  fillColor: '#66CCFF'
 			});
-		circle.bindTo('center', marker, 'position');
+		    circle.bindTo('center', marker, 'position');
         markers.push(marker);
         marker.addListener('click', function () {
           populateInfoWindow(this, largeInfowindow);
@@ -178,9 +209,6 @@ API Course, Lesson 1 -->
 
         marker.addListener('mouseover', function () {
           this.setIcon(highlightedIcon);
-        });
-        marker.addListener('mouseout', function () {
-          this.setIcon(defaultIcon);
         });
       };
 
